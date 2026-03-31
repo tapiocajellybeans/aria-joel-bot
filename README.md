@@ -4,24 +4,16 @@ Powered by **StepFun (step-3.5-flash)** / **Google Gemini 1.5 Flash** + **SQLite
 ---
 
 ## New Features & Updates
-***Enhanced Task Management**: Now supports adding and removing multiple tasks simultaneously using optimized JSON processing.
+* **Enhanced Task Management**: Now supports adding and removing multiple tasks simultaneously using optimized JSON processing.
 * **Facts Table (Brain Storage)**: A dedicated persistent storage for long-term facts.ARIA can now dynamically identify and store important information to its "brain" during conversations.
-***Multi-Format Document Scraping**: ARIA can now read, scrape, and store data from `docx`, `xlsx`, `pdf`, `csv`, and plaintext files.
+* **Multi-Format Document Scraping**: ARIA can now read, scrape, and store data from `docx`, `xlsx`, `pdf`, `csv`, and plaintext files.
 * **Dynamic Reasoning Engine**: Integrated a reasoning system that adjusts its processing depth based on the task:
     ***High**: Complex documents.
     ***Medium**: Long text analysis.
     ***Low**: Simple/easy tasks.
 
 ---
-
-## Step 1 — Create your Telegram Bot
-1. Open Telegram and search for **@BotFather**.
-2. Send `/newbot`.
-3. Pick a name (e.g., `ARIA Assistant`) and a username ending in `bot`.
-4. Copy the **Bot Token**.
-
-**Optional — set bot commands:**
-Send `/setcommands` to BotFather and paste:
+## **Bot commands:**
 ```
 start - Start ARIA
 help - Show available commands
@@ -31,16 +23,6 @@ brief - Get a daily briefing
 addtask - add tasks
 gettask - get tasks
 ```
-
----
-
-## Step 3 — Install & Run
-Requires **Node.js 18+**.
-```bash
-npm install
-npm start
-```
-
 ---
 
 ## Commands & Capabilities
@@ -56,12 +38,12 @@ npm start
 
 ## Persistent Storage
 * **aria.db**: This SQLite file stores all conversation history, pending tasks, and the new **Facts Table**.
-***Reasoning Logs**: View internal logic processing within the system logs to see how ARIA evaluates different task types.
+* **Reasoning Logs**: View internal logic processing within the system logs to see how ARIA evaluates different task types.
 
 ---
 
 ## Future Roadmap
-***Agentic Tasks**: Exporting DB to Google Sheets for automated polling and task reminders via Apps Script.
-***External Integrations**: Adding access to third-party services like Gmail.
-***Dynamic Fact Editing**: Allowing users to edit or remove "brain" facts directly from the system prompt.
-***Cloud Hosting**: Moving to a VPS for 24/7 uptime.
+* **Agentic Tasks**: Exporting DB to Google Sheets for automated polling and task reminders via Apps Script.
+* **External Integrations**: Adding access to third-party services like Gmail.
+* **Dynamic Fact Editing**: Allowing users to edit or remove "brain" facts directly from the system prompt.
+* **Cloud Hosting**: Moving to a VPS for 24/7 uptime.
