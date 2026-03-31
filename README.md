@@ -8,9 +8,9 @@ Powered by **StepFun (step-3.5-flash)** / **Google Gemini 1.5 Flash** + **SQLite
 * **Facts Table (Brain Storage)**: A dedicated persistent storage for long-term facts.ARIA can now dynamically identify and store important information to its "brain" during conversations.
 * **Multi-Format Document Scraping**: ARIA can now read, scrape, and store data from `docx`, `xlsx`, `pdf`, `csv`, and plaintext files.
 * **Dynamic Reasoning Engine**: Integrated a reasoning system that adjusts its processing depth based on the task:
-    ***High**: Complex documents.
-    ***Medium**: Long text analysis.
-    ***Low**: Simple/easy tasks.
+    * **High**: Complex documents.
+    * **Medium**: Long text analysis.
+    * **Low**: Simple/easy tasks.
 
 ---
 ## **Bot commands:**
