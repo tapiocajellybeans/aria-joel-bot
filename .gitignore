@@ -3,6 +3,7 @@
 .env.local
 .env.*.local
 _env
+system_prompt.txt
 
 # Database files
 *.db
