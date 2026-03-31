@@ -1,5 +1,5 @@
 # ARIA — Telegram Bot Setup Guide (v3)
-Powered by **StepFun (step-3.5-flash)** / **Google Gemini 1.5 Flash** + **SQLite** persistent storage.
+Powered by **StepFun Free (step-3.5-flash free)** + **SQLite** persistent storage.
 
 ---
 
