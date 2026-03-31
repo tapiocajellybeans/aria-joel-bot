@@ -1,129 +1,67 @@
-# ARIA — Telegram Bot Setup Guide (v2)
-Powered by **Google Gemini 1.5 Flash** (free) + **SQLite** persistent storage.
+# ARIA — Telegram Bot Setup Guide (v3)
+Powered by **StepFun (step-3.5-flash)** / **Google Gemini 1.5 Flash** + **SQLite** persistent storage.
+
+---
+
+## New Features & Updates
+***Enhanced Task Management**: Now supports adding and removing multiple tasks simultaneously using optimized JSON processing.
+* **Facts Table (Brain Storage)**: A dedicated persistent storage for long-term facts.ARIA can now dynamically identify and store important information to its "brain" during conversations.
+***Multi-Format Document Scraping**: ARIA can now read, scrape, and store data from `docx`, `xlsx`, `pdf`, `csv`, and plaintext files.
+* **Dynamic Reasoning Engine**: Integrated a reasoning system that adjusts its processing depth based on the task:
+    ***High**: Complex documents.
+    ***Medium**: Long text analysis.
+    ***Low**: Simple/easy tasks.
 
 ---
 
 ## Step 1 — Create your Telegram Bot
+1. Open Telegram and search for **@BotFather**.
+2. Send `/newbot`.
+3. Pick a name (e.g., `ARIA Assistant`) and a username ending in `bot`.
+4. Copy the **Bot Token**.
 
-1. Open Telegram and search for **@BotFather**
-2. Send `/newbot`
-3. Pick a name (e.g. `ARIA Assistant`) and a username ending in `bot`
-4. Copy the **Bot Token** BotFather gives you
-
-**Optional — set bot commands for a nice menu in Telegram:**
-Send `/setcommands` to BotFather, select your bot, then paste:
+**Optional — set bot commands:**
+Send `/setcommands` to BotFather and paste:
 ```
 start - Start ARIA
 help - Show available commands
 clear - Wipe conversation memory
 tasks - List pending tasks
 brief - Get a daily briefing
+addtask - add tasks
+gettask - get tasks
 ```
 
 ---
 
-## Step 2 — Get your Gemini API Key (free, no credit card)
-
-1. Go to [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
-2. Sign in with a Google account
-3. Click **Create API Key**
-4. Copy the key
-
-Free tier limits: **15 requests/min, 1,500 requests/day** — plenty for personal use.
-
----
-
-## Step 3 — Configure
-
-```bash
-cp .env.example .env
-```
-
-Fill in `.env`:
-```
-TELEGRAM_BOT_TOKEN=123456789:ABCDefGhIJKlmNoPQRsTUVwxyZ
-GEMINI_API_KEY=AIzaSy...
-```
-
----
-
-## Step 4 — Install & Run
-
+## Step 3 — Install & Run
 Requires **Node.js 18+**.
-
 ```bash
 npm install
 npm start
 ```
 
-You should see:
-```
-✅  SQLite database ready at /path/to/aria.db
-✅  ARIA Telegram Bot is running (Gemini + SQLite)...
-```
+---
 
-Open Telegram, find your bot, send `/start`.
+## Commands & Capabilities
+
+| Feature | Description |
+| :--- | :--- |
+| **Natural Language Tasks** |Add/remove single or multiple tasks at once. |
+| **Document Reading** |Upload `pdf`, `xlsx`, `docx`, or `csv` for ARIA to analyze. |
+| **Brain Storage** |Manual or AI-driven updates to a persistent facts table. |
+| **Memory Management** | `/clear` wipes chat history while keeping tasks and facts safe. |
 
 ---
 
-## Commands
-
-| Command  | What it does                          |
-|----------|---------------------------------------|
-| `/start` | Welcome message                       |
-| `/help`  | Show all commands                     |
-| `/clear` | Wipe conversation history from DB     |
-| `/tasks` | List pending tasks stored in DB       |
-| `/brief` | Daily briefing with task summary      |
+## Persistent Storage
+* **aria.db**: This SQLite file stores all conversation history, pending tasks, and the new **Facts Table**.
+***Reasoning Logs**: View internal logic processing within the system logs to see how ARIA evaluates different task types.
 
 ---
 
-## Task Management (natural language)
-
-ARIA can manage your tasks automatically through chat:
-
-- *"Add a task: review the Q4 report by Friday"*
-- *"Remind me to call Lisa tomorrow"*
-- *"Mark task 2 as done"*
-- *"What are my pending tasks?"*
-
-Tasks are saved to SQLite and survive restarts.
-
----
-
-## Persistent Memory
-
-Conversation history and tasks are stored in `aria.db` (SQLite file in the project folder).
-
-- History is loaded from DB on every message — ARIA remembers past sessions
-- `/clear` wipes conversation history but keeps tasks
-- Tasks persist until explicitly marked done
-
----
-
-## Running 24/7 (Railway — recommended)
-
-1. Push the project to a GitHub repo (make sure `.env` is in `.gitignore`)
-2. Go to [railway.app](https://railway.app) → New Project → Deploy from GitHub
-3. Add environment variables in Railway's dashboard (Settings → Variables)
-4. Railway auto-detects Node.js and runs `npm start`
-
-For the SQLite file to persist across Railway deploys, add a **Volume** in Railway:
-- Mount path: `/app` (or wherever your project runs)
-- This ensures `aria.db` isn't wiped on redeploy
-
----
-
-## Project Structure
-
-```
-aria-telegram-bot/
-├── bot.js          # Telegram bot + Gemini integration
-├── db.js           # All SQLite logic (messages + tasks)
-├── aria.db         # Auto-created on first run
-├── package.json
-├── .env.example
-├── .env            # Your secrets — never commit this
-├── .gitignore
-└── README.md
-```
+## Future Roadmap
+***Agentic Tasks**: Exporting DB to Google Sheets for automated polling and task reminders via Apps Script.
+***External Integrations**: Adding access to third-party services like Gmail.
+***Dynamic Fact Editing**: Allowing users to edit or remove "brain" facts directly from the system prompt.
+***Cloud Hosting**: Moving to a VPS for 24/7 uptime.
