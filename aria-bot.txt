@@ -23,6 +23,9 @@ added reasoning (within logs)
 - dynamically changes based on needs:
 - document - high, long text: med, easy task: low
 
+added startup func:
+- will automatically startup on computer startup
+
 to do:
 - allow for rm/edit dynamic facts from the system prompt
 - RUN THE SYSTEM THROUGH CLAUDE AND EVALUATE!!!
@@ -37,4 +40,3 @@ potential future functionality:
 - upload to cloud/VPS for 24/7 hosting 
 - add functionality to do agentic tasks: push for reminders when necessary
 	- export db to google sheets and use apps script to poll & send task reminders where necessary 
-- automatically run on startup?
