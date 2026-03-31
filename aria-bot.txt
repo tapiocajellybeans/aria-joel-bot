@@ -1,0 +1,40 @@
+aria bot updates:
+
+workflow:
+- telegram bot > stepfun/step-3.5-flash:free & SQLite > telegram output 
+
+added functionality to add tasks
+- uses JSON to add task, which is stripped b4 output 
+- added ability to add multiple tasks
+
+added func to rm task
+- uses JSON to rm task, which is stripped b4 output
+- added ability to remove multiple tasks
+
+added facts table (brain storage idea) 
+- now, facts have to be manually updated
+- add into facts table 
+- add functionality for AI to add facts when it fl it needa add facts
+
+added functionality to scrape and store data from docx, xlsx...
+- can read docx, xlsx, pdf, plaintext and csv
+
+added reasoning (within logs)
+- dynamically changes based on needs:
+- document - high, long text: med, easy task: low
+
+to do:
+- allow for rm/edit dynamic facts from the system prompt
+- RUN THE SYSTEM THROUGH CLAUDE AND EVALUATE!!!
+
+flaws:
+
+fixes:
+
+potential future functionality:
+- dump BB data into aria 
+- add functionality to access external third party like gmail?
+- upload to cloud/VPS for 24/7 hosting 
+- add functionality to do agentic tasks: push for reminders when necessary
+	- export db to google sheets and use apps script to poll & send task reminders where necessary 
+- automatically run on startup?
