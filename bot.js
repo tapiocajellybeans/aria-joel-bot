@@ -512,7 +512,7 @@ bot.on("document", async (msg) => {
 
 const pdfParse = require("pdf-parse");
 const mammoth  = require("mammoth");
-const XLSX     = require("xlsx");
+const ExcelJS  = require("exceljs"); 
 
 async function extractText(buffer, mimeType, fileName) {
   if (mimeType === "application/pdf") {
@@ -526,15 +526,25 @@ async function extractText(buffer, mimeType, fileName) {
   }
 
   if (mimeType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
-    const workbook = XLSX.read(buffer, { type: "buffer" });
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(buffer); // Loads the buffer asynchronously
+    
     let text = "";
-    for (const sheetName of workbook.SheetNames) {
-      const sheet = workbook.Sheets[sheetName];
-      text += `\n--- Sheet: ${sheetName} ---\n`;
-      text += XLSX.utils.sheet_to_csv(sheet);
-    }
+    
+    workbook.eachSheet((worksheet) => {
+      text += `\n--- Sheet: ${worksheet.name} ---\n`;
+      
+      worksheet.eachRow((row) => {
+        // row.values returns an array. Index 0 is empty due to ExcelJS 1-based indexing.
+        // We filter out the empty first element and join with commas to mimic CSV.
+        const rowData = row.values.slice(1).join(",");
+        text += rowData + "\n";
+      });
+    });
+
     return text;
   }
+
 
   if (mimeType === "text/csv" || mimeType === "text/plain") {
     return buffer.toString("utf-8");

@@ -40,3 +40,4 @@ potential future functionality:
 - upload to cloud/VPS for 24/7 hosting 
 - add functionality to do agentic tasks: push for reminders when necessary
 	- export db to google sheets and use apps script to poll & send task reminders where necessary 
+- add fallback model?
