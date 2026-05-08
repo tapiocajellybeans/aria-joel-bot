@@ -135,8 +135,29 @@ async function sendSafeMessage(chatId, text, options = {}) {
   }
 }
 
+const path = require("path");
+async function logAPIRequest(history, systemMessage, userText) {
+  const messages = [
+    { role: "system", content: systemMessage },
+    ...history.map((row) => ({ role: row.role, content: row.content })),
+  ];
+
+  const logEntry = {
+    timestamp: new Date().toISOString(),
+    userInput: userText,
+    messagesCount: messages.length,
+    messages: messages,
+    systemPromptLength: systemMessage.length
+  };
+
+  const logPath = path.join(__dirname, "api_logs.jsonl");
+  fs.appendFileSync(logPath, JSON.stringify(logEntry) + "\n");
+  
+  console.log(`📝 API request logged to api_logs.jsonl`);
+}
+
 // ── Call OpenRouter ──────────────────────────────────────────────────────
-async function callOpenRouter(history, systemPrompt = SYSTEM_PROMPT, effort = "low", maxRetries = 50, delayMs = 3000, chatId = null) {
+async function callOpenRouter(history, systemPrompt = SYSTEM_PROMPT, effort = "no_think", maxRetries = 50, delayMs = 3000, chatId = null) {
   const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY;
   if (!OPENROUTER_KEY) throw new Error("Missing OPENROUTER_API_KEY in .env");
 
@@ -156,9 +177,7 @@ async function callOpenRouter(history, systemPrompt = SYSTEM_PROMPT, effort = "l
         body: JSON.stringify({
           model: "tencent/hy3-preview:free",
           messages,
-          reasoning: {
-            effort: effort
-          }
+          extra_body: { chat_template_kwargs: { reasoning_effort: effort } }
         })
       });
 
@@ -209,18 +228,18 @@ function getReasoningEffort(userText, hasFile = false) {
     "improve", "suggest", "recommendations", "brief me", "breakdown"
   ];
 
-  const lowKeywords = [
+  const noThinkKeywords = [
     "add task", "remove task", "delete task", "clear", "list",
     "what time", "remind", "when is", "draft", "write a message",
     "hi", "hello", "thanks"
   ];
 
   if (highKeywords.some(k => text.includes(k))) return "high";
-  if (lowKeywords.some(k => text.includes(k)))  return "low";
-  if (length > 300) return "medium";
-  if (length > 80)  return "medium";
+  if (noThinkKeywords.some(k => text.includes(k))) return "no_think";
+  if (length > 300) return "low";
+  if (length > 80) return "low";
 
-  return "low";
+  return "no_think";
 }
 
 // ── Core: reply with AI ───────────────────────────────────────────────────
@@ -243,7 +262,19 @@ async function replyWithAI(chatId, userText, forceEffort = null) {
     const tasksText = tasks.length
       ? tasks.map(t => `${t.id}. ${t.text}`).join("\n")
       : "none";
-    const systemMessage = `${SYSTEM_PROMPT}\n\n*Dynamic facts:*\n${factsText}\n\n*Current pending tasks (use these IDs for remove_task):*\n${tasksText}`;
+
+    const systemMessage = `${SYSTEM_PROMPT}
+      *Dynamic facts:*
+      ${factsText}
+
+      *Current pending tasks (use these IDs for remove_task):*
+      ${tasksText}
+
+      ---
+      IMPORTANT: The conversation history above is for CONTEXT ONLY. 
+      Only respond to the LATEST user message. Do NOT continue, retry, or complete any tasks from previous messages unless the user explicitly asks you to.`;
+
+    await logAPIRequest(history, systemMessage, userText);
 
     const effort = forceEffort || getReasoningEffort(userText);
     console.log(`🧠 Reasoning effort: ${effort}`);
