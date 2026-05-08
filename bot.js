@@ -136,25 +136,22 @@ async function sendSafeMessage(chatId, text, options = {}) {
 }
 
 const path = require("path");
-async function logAPIRequest(history, systemMessage, userText) {
-  const messages = [
-    { role: "system", content: systemMessage },
-    ...history.map((row) => ({ role: row.role, content: row.content })),
-  ];
-
-  const logEntry = {
-    timestamp: new Date().toISOString(),
-    userInput: userText,
-    messagesCount: messages.length,
-    messages: messages,
-    systemPromptLength: systemMessage.length
+function logAPIRequest(messages) {
+  const record = {
+    messages: messages
   };
 
   const logPath = path.join(__dirname, "api_logs.jsonl");
-  fs.appendFileSync(logPath, JSON.stringify(logEntry) + "\n");
-  
+
+  fs.appendFileSync(
+    logPath,
+    JSON.stringify(record) + "\n",
+    "utf8"
+  );
+
   console.log(`📝 API request logged to api_logs.jsonl`);
 }
+
 
 // ── Call OpenRouter ──────────────────────────────────────────────────────
 async function callOpenRouter(history, systemPrompt = SYSTEM_PROMPT, effort = "no_think", maxRetries = 50, delayMs = 3000, chatId = null) {
@@ -168,9 +165,11 @@ async function callOpenRouter(history, systemPrompt = SYSTEM_PROMPT, effort = "n
   const messages = [
     { role: "system", content: systemPrompt },
     ...previousHistory.map((row) => ({ role: row.role, content: row.content })),
-    { role: "system", content: "The above is previous context and history. Now respond ONLY to the following current request, using the above as reference when necessary:" },
+    { role: "system", content: "IMPORTANT: The above is previous context and history. Now respond ONLY to the following current request, using the above as reference when necessary:" },
     { role: currentMessage.role, content: currentMessage.content },
   ];
+
+  // await logAPIRequest(messages); // for debugging API req to bot  
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -278,8 +277,6 @@ async function replyWithAI(chatId, userText, forceEffort = null) {
 
       ---
       IMPORTANT: The information above is for CONTEXT ONLY. The information next is the chat history`;
-
-    // await logAPIRequest(history, systemMessage, userText); // for debugging API req to bot  
 
     const effort = forceEffort || getReasoningEffort(userText);
     console.log(`🧠 Reasoning effort: ${effort}`);
