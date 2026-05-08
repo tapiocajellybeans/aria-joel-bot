@@ -166,7 +166,7 @@ async function callOpenRouter(history, systemPrompt = SYSTEM_PROMPT, effort = "n
   const currentMessage = history[history.length - 1]; // the just-saved user message
 
   const messages = [
-    { role: "system", content: systemMessage },
+    { role: "system", content: systemPrompt },
     ...previousHistory.map((row) => ({ role: row.role, content: row.content })),
     { role: "system", content: "The above is previous context and history. Now respond ONLY to the following current request, using the above as reference when necessary:" },
     { role: currentMessage.role, content: currentMessage.content },
@@ -279,7 +279,7 @@ async function replyWithAI(chatId, userText, forceEffort = null) {
       ---
       IMPORTANT: The information above is for CONTEXT ONLY. The information next is the chat history`;
 
-    await logAPIRequest(history, systemMessage, userText);
+    // await logAPIRequest(history, systemMessage, userText); // for debugging API req to bot  
 
     const effort = forceEffort || getReasoningEffort(userText);
     console.log(`🧠 Reasoning effort: ${effort}`);
