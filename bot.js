@@ -161,9 +161,15 @@ async function callOpenRouter(history, systemPrompt = SYSTEM_PROMPT, effort = "n
   const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY;
   if (!OPENROUTER_KEY) throw new Error("Missing OPENROUTER_API_KEY in .env");
 
+  // Separate current message from history
+  const previousHistory = history.slice(0, -1); // everything except last message
+  const currentMessage = history[history.length - 1]; // the just-saved user message
+
   const messages = [
-    { role: "system", content: systemPrompt },
-    ...history.map((row) => ({ role: row.role, content: row.content })),
+    { role: "system", content: systemMessage },
+    ...previousHistory.map((row) => ({ role: row.role, content: row.content })),
+    { role: "system", content: "The above is previous context and history. Now respond ONLY to the following current request, using the above as reference when necessary:" },
+    { role: currentMessage.role, content: currentMessage.content },
   ];
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -271,8 +277,7 @@ async function replyWithAI(chatId, userText, forceEffort = null) {
       ${tasksText}
 
       ---
-      IMPORTANT: The conversation history above is for CONTEXT ONLY. 
-      Only respond to the LATEST user message. Do NOT continue, retry, or complete any tasks from previous messages unless the user explicitly asks you to.`;
+      IMPORTANT: The information above is for CONTEXT ONLY. The information next is the chat history`;
 
     await logAPIRequest(history, systemMessage, userText);
 
