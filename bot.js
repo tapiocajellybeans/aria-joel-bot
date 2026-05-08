@@ -154,7 +154,7 @@ async function callOpenRouter(history, systemPrompt = SYSTEM_PROMPT, effort = "l
           "Authorization": `Bearer ${OPENROUTER_KEY}`
         },
         body: JSON.stringify({
-          model: "stepfun/step-3.5-flash:free",
+          model: "tencent/hy3-preview:free",
           messages,
           reasoning: {
             effort: effort
